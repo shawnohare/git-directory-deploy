@@ -11,6 +11,7 @@ main() {
 	append_hash=true
 
 	# Parse arg flags
+	# [<options>] [<directory> [<branch> [<repository]]]
 	while : ; do
 		if [[ $1 = "-v" || $1 = "--verbose" ]]; then
 			verbose=true
@@ -27,6 +28,16 @@ main() {
 		elif [[ $1 = "-c" || $1 = "--config-file" ]]; then
 			source "$2"
 			shift 2
+		elif [[ -n ${1} ]]; then
+			# Set positional args
+			deploy_directory=$1
+			if [[ -n $2 ]]; then
+				deploy_branch=$2
+			fi
+			if [[ -n $3 ]]; then
+				repo=$3
+			fi
+			break
 		else
 			break
 		fi
