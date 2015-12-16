@@ -24,3 +24,21 @@ source deploy.sh --source-only
 	skip # No var to test yet.
 }
 
+# Script's default settings.
+@test 'script default: default_username' {
+	assert that `parse_args && echo $default_username` = "deploy.sh"
+}
+@test 'script default: default_email' {
+	skip # Needs a value to check against.
+	assert that `parse_args && echo $default_email` = ""
+}
+@test 'script default: deploy_directory' {
+	assert that `parse_args && echo $deploy_directory` = "dist"
+}
+@test 'script default: deploy_branch' {
+	assert that `parse_args && echo $deploy_branch` = "gh-pages"
+}
+@test 'script default: repo' {
+	assert that `parse_args && echo $repo` = "origin"
+}
+
