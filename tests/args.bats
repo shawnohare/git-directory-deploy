@@ -42,3 +42,13 @@ source deploy.sh --source-only
 	assert that `parse_args && echo $repo` = "origin"
 }
 
+# Positional args.
+@test 'positional args' {
+	skip # Test is failing.
+	assert that $(
+		args="-n pos-dir pos-branch pos-repo"
+		parse_args
+		echo $deploy_directory
+	) = "pos-dir"
+}
+
