@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -o errexit #abort if any command fails
 
-main() {
+parse_args() {
 	# Set args from a local environment file.
 	if [ -e ".env" ]; then
 		source .env
@@ -53,7 +53,11 @@ main() {
 
 	#repository to deploy to. must be readable and writable.
 	repo=${GIT_DEPLOY_REPO:-origin}
-	
+}
+
+main() {
+	parse_args "$@"
+
 	enable_expanded_output
 
 	if ! git diff --exit-code --quiet --cached; then
