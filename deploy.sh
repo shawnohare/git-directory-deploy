@@ -63,12 +63,12 @@ parse_args() {
 			shift
 		elif [[ -n ${1} ]]; then
 			# Set positional args
-			deploy_directory=$1
+			GIT_DEPLOY_DIR=$1
 			if [[ -n $2 ]]; then
-				deploy_branch=$2
+				GIT_DEPLOY_BRANCH=$2
 			fi
 			if [[ -n $3 ]]; then
-				repo=$3
+				GIT_DEPLOY_REPO=$3
 			fi
 			break
 		else
