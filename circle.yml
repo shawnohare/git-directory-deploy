@@ -5,4 +5,4 @@ dependencies:
 
 test:
     post:
-        - bats . lib tests
+        - bats . lib
