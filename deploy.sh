@@ -15,7 +15,7 @@ Options:
                            deploy branch.
   -n, --no-hash            Don't append the source commit's hash to the deploy
                            commit's message.
-  -c, --config-file PATH   Override default & environment variables' values
+  -c, --config PATH        Override default & environment variables' values
                            with those in set in the file at 'PATH'. Must be the
                            first option specified.
 
@@ -28,7 +28,7 @@ Variables:
 These variables have default values defined in the script. The defaults can be
 overridden by environment variables. Any environment variables are overridden
 by values set in a '.env' file (if it exists), and in turn by those set in a
-file specified by the '--config-file' option.
+file specified by the '--config' option.
 
 Positional Args:
 
@@ -44,7 +44,7 @@ parse_args() {
 	fi
 
 	# Set args from file specified on the command-line.
-	if [[ $1 = "-c" || $1 = "--config-file" ]]; then
+	if [[ $1 = "-c" || $1 = "--config" ]]; then
 		source "$2"
 		shift 2
 	fi
