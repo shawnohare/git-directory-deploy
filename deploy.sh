@@ -3,7 +3,7 @@ set -o errexit #abort if any command fails
 me=$(basename "$0")
 
 help_message="\
-Usage: $me [-c FILE] [<options>]
+Usage: $me [-c <FILE>] [<options>] [<directory> [<branch> [<repository>]]]
 Deploy generated files to a git branch.
 
 Options:
@@ -28,7 +28,14 @@ Variables:
 These variables have default values defined in the script. The defaults can be
 overridden by environment variables. Any environment variables are overridden
 by values set in a '.env' file (if it exists), and in turn by those set in a
-file specified by the '--config-file' option."
+file specified by the '--config-file' option.
+
+Positional Args:
+
+At the end of the command, you can optionally specify the directory, branch,
+and repository as well. Earlier values are required to specify later ones. For
+example, in order to specify <branch>, you must also specify <directory>. Like
+the command-line options, these"
 
 parse_args() {
 	# Set args from a local environment file.
