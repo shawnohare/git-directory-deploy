@@ -89,6 +89,7 @@ parse_args() {
 	# Source directory & target branch.
 	deploy_directory=${GIT_DEPLOY_DIR:-dist}
 	deploy_branch=${GIT_DEPLOY_BRANCH:-gh-pages}
+  local_deploy_branch="git-directory-deploy-${deploy_branch}"
 
 	#if no user identity is already set in the current git environment, use this:
 	default_username=${GIT_DEPLOY_USERNAME:-deploy.sh}
@@ -141,12 +142,12 @@ main() {
 		# deploy_branch exists in $repo; make sure we have the latest version
 		
 		disable_expanded_output
-		git fetch --force $repo $deploy_branch:$deploy_branch
+		git fetch --force $repo $deploy_branch:$local_deploy_branch
 		enable_expanded_output
 	fi
 
 	# check if deploy_branch exists locally
-	if git show-ref --verify --quiet "refs/heads/$deploy_branch"
+	if git show-ref --verify --quiet "refs/heads/${local_deploy_branch}"
 	then incremental_deploy
 	else initial_deploy
 	fi
@@ -155,14 +156,14 @@ main() {
 }
 
 initial_deploy() {
-	git --work-tree "$deploy_directory" checkout --orphan $deploy_branch
-	git --work-tree "$deploy_directory" add --all
+	git --work-tree "${deploy_directory}" checkout --orphan "${local_deploy_branch}"
+	git --work-tree "${deploy_directory}" add --all
 	commit+push
 }
 
 incremental_deploy() {
 	#make deploy_branch the current branch
-	git symbolic-ref HEAD refs/heads/$deploy_branch
+	git symbolic-ref HEAD "refs/heads/${local_deploy_branch}"
 	#put the previously committed contents of deploy_branch into the index
 	git --work-tree "$deploy_directory" reset --mixed --quiet
 	git --work-tree "$deploy_directory" add --all
@@ -174,7 +175,9 @@ incremental_deploy() {
 		0) echo No changes to files in $deploy_directory. Skipping commit.;;
 		1) commit+push;;
 		*)
-			echo git diff exited with code $diff. Aborting. Staying on branch $deploy_branch so you can debug. To switch back to master, use: git symbolic-ref HEAD refs/heads/master && git reset --mixed >&2
+			echo "git diff exited with code $diff. Aborting."
+      echo "Staying on branch ${localdeploy_branch} so you can debug." 
+      echo "To switch back to master, use: git symbolic-ref HEAD refs/heads/master && git reset --mixed >&2"
 			return $diff
 			;;
 	esac
@@ -218,7 +221,7 @@ set_user_id() {
 restore_head() {
 	if [[ $previous_branch = "HEAD" ]]; then
 		#we weren't on any branch before, so just set HEAD back to the commit it was on
-		git update-ref --no-deref HEAD $commit_hash $deploy_branch
+		git update-ref --no-deref HEAD $commit_hash "${local_deploy_branch}"
 	else
 		git symbolic-ref HEAD refs/heads/$previous_branch
 	fi
