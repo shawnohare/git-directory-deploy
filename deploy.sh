@@ -59,6 +59,9 @@ parse_args() {
 		elif [[ $1 = "-v" || $1 = "--verbose" ]]; then
 			verbose=true
 			shift
+		elif [[ $1 = "-f" || $1 = "--force" ]]; then
+			force=true
+			shift
 		elif [[ $1 = "-e" || $1 = "--allow-empty" ]]; then
 			allow_empty=true
 			shift
@@ -189,7 +192,9 @@ commit+push() {
 
 	disable_expanded_output
 	#--quiet is important here to avoid outputting the repo URL, which may contain a secret token
-	git push --quiet $repo "${local_deploy_branch}:${deploy_branch}"
+  local force_op=""
+  if [[ $force  ]]; then force_op="-f"; fi
+	git push ${force_op} --quiet $repo "${local_deploy_branch}:${deploy_branch}"
 	enable_expanded_output
 }
 
